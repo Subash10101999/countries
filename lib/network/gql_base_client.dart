@@ -1,12 +1,11 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-class Api {
+class GglBaseClient {
   late GraphQLClient gqlClient;
 
-  Api() {
+  GglBaseClient() {
     gqlClient = GraphQLClient(
       link: AuthLink(getToken: () => "").concat(HttpLink(
         'https://countries.trevorblades.com/graphql',
@@ -33,7 +32,7 @@ class Api {
       ),
     );
 
-    return json.encode(result.data);
+    return result.data;
   }
 
   Future fetchLanguages() async {
@@ -50,7 +49,7 @@ class Api {
         document: gql(query),
       ),
     );
-    return json.encode(result.data!['languages']);
+    return result.data!['languages'];
   }
 
   Future fetchCountryByCode(context, {String? code}) async {
@@ -77,6 +76,6 @@ class Api {
       return null;
     }
 
-    return json.encode(result.data);
+    return result.data;
   }
 }

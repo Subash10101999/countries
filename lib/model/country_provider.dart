@@ -1,49 +1,43 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../network/api.dart';
+import '../network/gql_base_client.dart';
 import 'country.dart';
 import 'language.dart';
 
 class CountryProvider extends ChangeNotifier {
-  final Api _api = Api();
-  List<CountryElement>? _countries = [];
+  final GglBaseClient _api = GglBaseClient();
+  List<Country>? _countries = [];
   final List<Language> _languages = [];
-  CountryElement? _country;
+  Country? _country;
 
-  List<CountryElement>? get countries => _countries;
+  List<Country>? get countries => _countries;
 
   List<Language> get languages => _languages;
 
-  CountryElement? get country => _country;
+  Country? get country => _country;
 
-  Future getCountryName() async {
+  Future fetchCountryName() async {
     final result = await _api.fetchCountries();
-    final decode = jsonDecode(result);
-    final parse = Data.fromJson(decode);
-    _countries = parse.countries;
+    _countries =
+        result["countries"].map<Country>((x) => Country.fromJson(x)).toList();
     _countries!.sort((a, b) => a.name!.compareTo(b.name!));
-
     notifyListeners();
   }
 
-  Future getLanguages() async {
+  Future fetchLanguages() async {
     final result = await _api.fetchLanguages();
-    final decode = jsonDecode(result);
-    for (var l in decode) {
-      languages.add(Language.fromJson(l));
+    for (var language in result) {
+      languages.add(Language.fromJson(language));
     }
 
     notifyListeners();
   }
 
-  Future getCountryNameByCode(context, {String? code}) async {
+  Future fetchCountryNameByCode(context, {String? code}) async {
     final result = await _api.fetchCountryByCode(context, code: code);
     if (result != null) {
-      final decode = jsonDecode(result);
-      if (decode['country'] == null) {
+      if (result['country'] == null) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text(
             "Country Code doesn't exists",
@@ -53,7 +47,7 @@ class CountryProvider extends ChangeNotifier {
         ));
         return;
       }
-      final parse = CountryElement.fromJson(decode['country']);
+      final parse = Country.fromJson(result['country']);
       _country = parse;
 
       notifyListeners();

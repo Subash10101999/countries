@@ -59,7 +59,7 @@ class _CountrySearchState extends State<CountrySearch> {
                         const SizedBox(height: 20),
                         ElevatedButton.icon(
                           onPressed: () async {
-                            code = await (countryProvider.getCountryNameByCode(
+                            code = await (countryProvider.fetchCountryNameByCode(
                                 context,
                                 code: controller.text.trim().toUpperCase()));
                             controller.clear();

@@ -14,15 +14,15 @@ class CountryPage extends StatefulWidget {
 
 class _CountryPageState extends State<CountryPage> {
   late CountryProvider _countryProvider;
-  final List<CountryElement> _countries = [];
+  final List<Country> _countries = [];
 
   @override
   void initState() {
     super.initState();
 
     Future.delayed(Duration.zero, () async {
-      await _countryProvider.getCountryName();
-      await _countryProvider.getLanguages();
+      await _countryProvider.fetchCountryName();
+      await _countryProvider.fetchLanguages();
     });
   }
 
@@ -84,12 +84,12 @@ class _CountryPageState extends State<CountryPage> {
   }
 
   Future _filter(languageName) async {
-    List<CountryElement> _temp = [];
+    List<Country> _temp = [];
     _temp.addAll(_countryProvider.countries!);
-    for (var v in _temp) {
-      for (var l in v.languages!) {
-        if (l.name!.toLowerCase().contains(languageName.toLowerCase())) {
-          _countries.add(v);
+    for (var value in _temp) {
+      for (var language in value.languages!) {
+        if (language.name!.toLowerCase().contains(languageName.toLowerCase())) {
+          _countries.add(value);
         }
       }
     }
@@ -163,7 +163,7 @@ class _CountryPageState extends State<CountryPage> {
     );
   }
 
-  Widget _countriesList({required List<CountryElement> countries}) {
+  Widget _countriesList({required List<Country> countries}) {
     return ListView.separated(
         separatorBuilder: (_, index) {
           return const Divider();
