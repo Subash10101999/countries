@@ -15,7 +15,7 @@ class Api {
     );
   }
 
-  Future getCountries() async {
+  Future fetchCountries() async {
     const String query = '''
     query {
       countries {
@@ -36,7 +36,7 @@ class Api {
     return json.encode(result.data);
   }
 
-  Future getLanguages() async {
+  Future fetchLanguages() async {
     const String query = '''
     query Query {
       languages {
@@ -53,7 +53,7 @@ class Api {
     return json.encode(result.data!['languages']);
   }
 
-  Future getCountryByCode(context, {String? code}) async {
+  Future fetchCountryByCode(context, {String? code}) async {
     final String query = '''
     query Query {
       country(code: "$code") {
@@ -68,8 +68,11 @@ class Api {
     );
     if (result.hasException) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("Country Code doesn't exists"),
-        backgroundColor: Colors.red,
+        content: Text(
+          "Country Code doesn't exists",
+          style: TextStyle(color: Colors.red),
+        ),
+        backgroundColor: Colors.grey,
       ));
       return null;
     }

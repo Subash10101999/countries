@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../network/api.dart';
 import 'country.dart';
-
+import 'language.dart';
 
 class CountryProvider extends ChangeNotifier {
   final Api _api = Api();
@@ -14,12 +14,13 @@ class CountryProvider extends ChangeNotifier {
   CountryElement? _country;
 
   List<CountryElement>? get countries => _countries;
+
   List<Language> get languages => _languages;
 
   CountryElement? get country => _country;
 
   Future getCountryName() async {
-    final result = await _api.getCountries();
+    final result = await _api.fetchCountries();
     final decode = jsonDecode(result);
     final parse = Data.fromJson(decode);
     _countries = parse.countries;
@@ -29,9 +30,9 @@ class CountryProvider extends ChangeNotifier {
   }
 
   Future getLanguages() async {
-    final result = await _api.getLanguages();
+    final result = await _api.fetchLanguages();
     final decode = jsonDecode(result);
-    for(var l in decode) {
+    for (var l in decode) {
       languages.add(Language.fromJson(l));
     }
 
@@ -39,13 +40,16 @@ class CountryProvider extends ChangeNotifier {
   }
 
   Future getCountryNameByCode(context, {String? code}) async {
-    final result = await _api.getCountryByCode(context, code: code);
+    final result = await _api.fetchCountryByCode(context, code: code);
     if (result != null) {
       final decode = jsonDecode(result);
       if (decode['country'] == null) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Country Code doesn't exists"),
-          backgroundColor: Colors.red,
+          content: Text(
+            "Country Code doesn't exists",
+            style: TextStyle(color: Colors.red),
+          ),
+          backgroundColor: Colors.grey,
         ));
         return;
       }

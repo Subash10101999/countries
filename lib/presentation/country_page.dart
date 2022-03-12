@@ -154,43 +154,30 @@ class _CountryPageState extends State<CountryPage> {
               child: _countryProvider.countries!.isEmpty
                   ? const Center(child: CircularProgressIndicator())
                   : _countries.isEmpty
-                      ? ListView.separated(
-                          separatorBuilder: (_, index) {
-                            return const Divider();
-                          },
-                          itemCount: _countryProvider.countries!.length,
-                          itemBuilder: (context, index) {
-                            final countryName =
-                                _countryProvider.countries![index].name!;
-                            final countryLanguage =
-                                _countryProvider.countries![index].languages!;
-                            return ListTile(
-                              title: Text(countryName),
-                              trailing: countryLanguage.isNotEmpty
-                                  ? Text(countryLanguage[0].name!)
-                                  : const SizedBox(),
-                            );
-                          })
-                      : ListView.separated(
-                          separatorBuilder: (_, index) {
-                            return const Divider();
-                          },
-                          itemCount: _countries.length,
-                          itemBuilder: (context, index) {
-                            final countryName = _countries[index].name!;
-                            final countryLanguage =
-                                _countries[index].languages!;
-                            return ListTile(
-                              title: Text(countryName),
-                              subtitle: countryLanguage.isNotEmpty
-                                  ? Text(countryLanguage[0].name!)
-                                  : const SizedBox(),
-                            );
-                          }),
+                      ? _countriesList(countries: _countryProvider.countries!)
+                      : _countriesList(countries: _countries),
             ),
           ],
         ),
       ),
     );
+  }
+
+  Widget _countriesList({required List<CountryElement> countries}) {
+    return ListView.separated(
+        separatorBuilder: (_, index) {
+          return const Divider();
+        },
+        itemCount: countries.length,
+        itemBuilder: (context, index) {
+          final countryName = countries[index].name!;
+          final countryLanguage = countries[index].languages!;
+          return ListTile(
+            title: Text(countryName),
+            trailing: countryLanguage.isNotEmpty
+                ? Text(countryLanguage[0].name!)
+                : const SizedBox(),
+          );
+        });
   }
 }

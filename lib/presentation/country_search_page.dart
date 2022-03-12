@@ -57,14 +57,15 @@ class _CountrySearchState extends State<CountrySearch> {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        TextButton(
+                        ElevatedButton.icon(
                           onPressed: () async {
                             code = await (countryProvider.getCountryNameByCode(
                                 context,
                                 code: controller.text.trim().toUpperCase()));
                             controller.clear();
                           },
-                          child: const Text('Submit'),
+                          icon: const Icon(Icons.search),
+                          label: const Text('Search'),
                         ),
                       ],
                     ),
